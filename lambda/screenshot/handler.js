@@ -3,7 +3,6 @@
 const sharp = require('sharp');
 const chromium = require('chrome-aws-lambda');
 const puppeteer = require('puppeteer-core');
-const hexRgb = require('hex-rgb');
 
 const quantcastCleaner = require('./utils/cleaners/quantcast');
 const bannerCleaner = require('./utils/cleaners/banner');
@@ -20,8 +19,9 @@ module.exports.screenshot = async (event, context, callback) => {
 
     let page = await browser.newPage();
 
-    let url = 'https://www.premieroctet.com/';
-    let color = 'transparent';
+    let url = 'https://www.carrotquest.io/';
+	let screen_height = 600;
+	let screen_width = 800;
 
     if (event.queryStringParameters && event.queryStringParameters.url) {
       url = decodeURIComponent(event.queryStringParameters.url);
@@ -31,11 +31,15 @@ module.exports.screenshot = async (event, context, callback) => {
       }
     }
 
-    if (event.queryStringParameters && event.queryStringParameters.color) {
-      color = event.queryStringParameters.color;
+	if (event.queryStringParameters && event.queryStringParameters.height) {
+      screen_height = parseInt(event.queryStringParameters.height);
+    }
+	
+	if (event.queryStringParameters && event.queryStringParameters.width) {
+      screen_width = parseInt(event.queryStringParameters.width);
     }
 
-    await page.setViewport({ width: 1280, height: 800 });
+    await page.setViewport({ width: screen_width, height: screen_height });
     await page.goto(url, { waitUntil: 'networkidle2' });
 
     const cleaners = [bannerCleaner, quantcastCleaner];
@@ -53,21 +57,7 @@ module.exports.screenshot = async (event, context, callback) => {
     const screenshot = await page.screenshot();
     await browser.close();
 
-    let r,
-      g,
-      b = 0;
-
-    try {
-      ({ red: r, green: g, blue: b } = hexRgb(color));
-    } catch (e) {
-      color = 'transparent';
-    }
-
-    let image = await sharp(__dirname + '/assets/browser.png').overlayWith(screenshot, { top: 138, left: 112 });
-    if (color !== 'transparent') {
-      image = await image.flatten({ background: { r, g, b, alpha: 1 } });
-    }
-
+	let image = sharp(screenshot);
     const buffer = await image.toBuffer();
 
     callback(null, {
