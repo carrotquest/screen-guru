@@ -40,7 +40,7 @@ module.exports.screenshot = async (event, context, callback) => {
     }
 
     await page.setViewport({ width: screen_width, height: screen_height });
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    await page.goto(url, { waitUntil: 'networkidle0' });
 
     const cleaners = [bannerCleaner, quantcastCleaner];
 
