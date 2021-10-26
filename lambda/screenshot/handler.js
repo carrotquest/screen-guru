@@ -18,6 +18,21 @@ module.exports.screenshot = async (event, context, callback) => {
     });
 
     let page = await browser.newPage();
+  
+    const logPrefix = event.queryStringParameters && event.queryStringParameters.url
+      ? `LOG: {"url":"${event.queryStringParameters.url}"`
+      : `LOG: {"url":"unknown"`;
+    page
+      .on('pageerror', ({ message }) =>
+        console.log(`${logPrefix} Page Error: `, message))
+      .on('response', response => {
+        console.info(response.status().toString(), response.status.toString().startsWith('2'))
+        if (!response.status().toString().startsWith('2')) {
+          console.log(`${logPrefix} Response: ${response.status()} ${response.url()}`);
+        }
+      })
+      .on('requestfailed', request =>
+        console.log(`${logPrefix} Request Failed: ${request.failure().errorText} ${request.url()}`))
 
     let url = 'https://www.carrotquest.io/';
 	let screen_height = 600;
