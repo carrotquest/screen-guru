@@ -1,9 +1,11 @@
 service: screenshot
 provider:
   name: aws
-  runtime: nodejs8.10
-  region: eu-central-1
+  runtime: nodejs14.x
+  region: eu-west-1
   stage: production
+  deploymentBucket:
+    name: cq-screenshot-service-pr-serverlessdeploymentbuck-kkaocv7d3u87
 
 functions:
   screenshot:
@@ -20,7 +22,7 @@ functions:
 plugins:
   - serverless-apigwy-binary
   - serverless-apigw-binary
- 
+
 custom:
   apigwBinary:
     types:
