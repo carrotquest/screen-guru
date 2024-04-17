@@ -10,7 +10,7 @@ provider:
 functions:
   screenshot:
     handler: handler.screenshot
-    timeout: 10
+    timeout: 30
     events:
       - http:
           path: screenshot
