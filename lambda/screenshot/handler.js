@@ -67,7 +67,7 @@ module.exports.screenshot = async (event, context, callback) => {
     });
 
     await page._client.send('Animation.setPlaybackRate', { playbackRate: 20 });
-    await page.waitFor(500);
+    await page.waitForSelector("cq-frame", {"timeout": 10000})
 
     const screenshot = await page.screenshot();
     await browser.close();
