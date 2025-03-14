@@ -45,7 +45,11 @@ With [serverless](https://serverless.com/):
 yarn global add serverless
 
 cd lambda/screenshot
-serverless config credentials –provider aws –key XXX –secret XXX
+
+# serverless config credentials –provider aws –key XXX –secret XXX
+# this is DEPRECATED changed to (use menu to enter AWS credentials):
+serverless
+
 yarn
 yarn add --dev serverless-apigwy-binary serverless-apigw-binary
 yarn build-lambda-sharp
@@ -54,3 +58,13 @@ serverless deploy
 ```
 
 Update the env var `REACT_APP_LAMBDA_ENDPOINT` (in `.env`) with your lambda endpoint
+
+
+Carrot quest notes
+==================
+1. I built this project in WSL environment.
+2. Node 18 should be installed. For some reason, on v22 I got `unsupported` errors during `yarn build`. 
+   a. I used node v18.20.7 and yarn 1.22.22
+3. serverless now requires an account. You can ask Mikhail Shvein for credentials. Email is `services@carrotquest.io`.
+4. `serverless config...` has changed. Now just type `serverless`, and use menu to enter AWS credentials.
+5. `REACT_APP_LAMBDA_ENDPOINT` should contain AWS result path. For example `https://k63lbhzo6e.execute-api.eu-west-1.amazonaws.com/production/screenshot`.
