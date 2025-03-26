@@ -9,7 +9,9 @@ const bannerCleaner = require('./utils/cleaners/banner');
 
 module.exports.screenshot = async (event, context, callback) => {
   let browser = null;
-
+  console.log('---------------------')
+  console.log(chromium.args)
+  console.log('---------------------')
   try {
     browser = await puppeteer.launch({
       args: chromium.args,
@@ -31,8 +33,9 @@ module.exports.screenshot = async (event, context, callback) => {
           console.log(`${logPrefix} Response: ${response.status()} ${response.url()}`);
         }
       })
-      .on('requestfailed', request =>
-        console.log(`${logPrefix} Request Failed: ${request.failure().errorText} ${request.url()}`))
+      .on('requestfailed', request =>{
+        console.log(`${logPrefix} Request Failed: ${request.failure()?.errorText} ${request.url()}`)
+      })
 
     let url = 'https://www.carrotquest.io/';
 	let screen_height = 600;
